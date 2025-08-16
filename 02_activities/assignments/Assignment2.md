@@ -53,9 +53,31 @@ The store wants to keep customer addresses. Propose two architectures for the CU
 
 **HINT:** search type 1 vs type 2 slowly changing dimensions. 
 
-```
-Your answer...
-```
+
+**Type 1: Overwrite**  
+In this approach, address fields are stored directly in the **customers** table:  
+- `street`  
+- `city`  
+- `province`  
+- `postal_code`  
+
+When a customer changes their address, these fields are simply updated in place, keeping only the most recent address. Each customer has exactly one row, and older address information is not retained.  
+
+---
+
+**Type 2: Retain Changes (Keep History)**  
+In this approach, a separate table **customer_address** is created to store historical address records:  
+- `address_id` (PK)  
+- `customer_id` (FK)  
+- `street`  
+- `city`  
+- `province`  
+- `postal_code`  
+- `start_date`  
+- `end_date` (NULL if current)  
+
+Each time a customer changes their address, a new row is inserted with the updated details and appropriate date range. The `customer_id` will appear in multiple rows, allowing a full address history to be stored. This design is beneficial for tracking customer locations over time, supporting activities like marketing, fraud detection, or sales analysis by region.
+
 
 ***
 
